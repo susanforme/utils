@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "./shared/typescript-config/node",
+    "./tsconfig.base.json"
+  ],
+  "include": [
+    "scripts/**/*",
+    "shared",
+    "packages/postcss/**/*"
+  ],
+  "exclude": [
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/tests/**",
+    "**/dist"
+  ]
+}

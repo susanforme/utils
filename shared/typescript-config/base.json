@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "esnext",
+    "module": "esnext",
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "allowJs": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "types": [],
+    "preserveSymlinks": false,
+    "composite": true,
+    "jsx": "preserve",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "./shared/typescript-config/vue",
+    "./tsconfig.base.json"
+  ],
+  "include": [
+    "packages",
+  ],
+  "exclude": [
+    "**/dist",
+    "**/__tests__/**/*",
+    "**/gulpfile.ts",
+    "**/test-helper",
+    "**/*.test.ts",
+    "packages/test-utils",
+    "**/*.md",
+    "package/typescript-config",
+    "package/eslint-config"
+  ],
+}

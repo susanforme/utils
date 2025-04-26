@@ -1,0 +1,12 @@
+node_modules/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+
+**/dist
+.turbo
+# unplugins
+.eslintrc-auto-import.json
+auto-imports.d.ts
+components.d.ts

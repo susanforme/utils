@@ -1,0 +1,12 @@
+{
+  "extends": "./shared/typescript-config/vitest",
+  "include": [
+    "packages",
+    "vitest.setup.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.md"
+  ]
+}

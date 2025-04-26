@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "@tsconfig/node22/tsconfig.json",
+    "./base.json"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "lib": [
+      "ESNext"
+    ],
+    "types": [
+      "node"
+    ],
+    "skipLibCheck": true
+  }
+}

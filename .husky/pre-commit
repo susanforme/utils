@@ -1,0 +1,45 @@
+# Get staged files - simplified approach for Windows compatibility
+echo "Getting staged files..."
+
+export PATH="$HOME/.fnm:$PATH"
+eval "$(fnm env)"
+
+git diff --cached --name-only --diff-filter=ACMR > .staged_files.txt
+if [ -s .staged_files.txt ]; then
+  STAGED_JS_FILES=$(grep -E '\.js$|\.jsx$|\.ts$|\.tsx$' .staged_files.txt || echo "")
+  echo "Staged JS/TS files:"
+  echo "$STAGED_JS_FILES"
+else
+  echo "No staged files found"
+  STAGED_JS_FILES=""
+fi
+
+# Skip if no staged JS/TS files
+if [ -z "$STAGED_JS_FILES" ]; then
+  echo "No JS/TS files to check, skipping checks"
+  rm -f .staged_files.txt
+  exit 0
+fi
+
+# Run type check and lint with turbo
+echo "Checking changed files..."
+
+# Run commands only if there are files to check
+if [ -n "$STAGED_JS_FILES" ]; then
+  echo "Running tsc..."
+  pnpm tsc --noEmit || { echo "TypeScript check failed"; rm -f .staged_files.txt; exit 1; }
+  
+  echo "Running turbo lint..."
+  pnpm turbo lint || { echo "Turbo lint failed"; rm -f .staged_files.txt; exit 1; }
+  
+  # Add formatted files back
+  echo "Adding formatted files back to git..."
+  for file in $STAGED_JS_FILES; do
+    git add "$file"
+  done
+fi
+
+# Clean up
+rm -f .staged_files.txt
+
+echo "✓ Pre-commit checks completed"

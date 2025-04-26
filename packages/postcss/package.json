@@ -1,0 +1,41 @@
+{
+  "name": "@cherrywind/postcss",
+  "version": "0.0.1-alpha",
+  "private": false,
+  "keywords": [
+    "postcss",
+    "postcss-plugin",
+    "rem",
+    "css-variables",
+    "postcss8"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/susanforme/utils"
+  },
+  "license": "MIT",
+  "type": "commonjs",
+  "exports": {
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.js"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "lint": "cross-env oxlint && eslint \"{src,test}/**/*.{ts,tsx}\" --config eslint.config.mjs",
+    "preview": "vite preview",
+    "release": "changeset",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "postcss": "^8.0.0"
+  },
+  "peerDependencies": {
+    "postcss": "^8.0.0"
+  }
+}

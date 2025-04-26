@@ -1,0 +1,33 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "cSpell.words": [
+    "Cascader",
+    "commitlint",
+    "jsencrypt",
+    "oxlint",
+    "persistedstate",
+    "Pinia",
+    "popconfirm",
+    "rushstack",
+    "SDLK",
+    "unplugin",
+    "USERCENTER",
+    "vivaia"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // 根目录run
+  "npm.exclude": [
+    "**/packages/**",
+  ],
+  "files.readonlyInclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.turbo/**": true,
+    "packages/*/components.d.ts": true,
+    "packages/*/auto-imports.d.ts": true,
+  }
+}
