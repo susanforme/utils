@@ -16,11 +16,11 @@ A lightweight and flexible layout system for responsive web design, inspired by 
 ## Installation
 
 ```bash
-npm install @your-scope/flexible
+npm install @cherrywind/flexible
 # or
-yarn add @your-scope/flexible
+yarn add @cherrywind/flexible
 # or
-pnpm add @your-scope/flexible
+pnpm add @cherrywind/flexible
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ pnpm add @your-scope/flexible
 ### Basic Usage
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 // Initialize with default settings
 const cleanup = flexible();
@@ -40,7 +40,7 @@ cleanup();
 ### With Custom Options
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
@@ -99,7 +99,7 @@ cleanup();
 ### Basic Example
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 // Initialize with default settings
 const cleanup = flexible();
@@ -111,7 +111,7 @@ const cleanup = flexible();
 ### Custom Breakpoints Example
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
@@ -123,7 +123,7 @@ const cleanup = flexible({
 ### Custom Scope Example
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 const container = document.querySelector('.container');
 const cleanup = flexible({

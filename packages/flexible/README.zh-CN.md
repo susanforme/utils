@@ -16,11 +16,11 @@
 ## 安装
 
 ```bash
-npm install @your-scope/flexible
+npm install @cherrywind/flexible
 # 或
-yarn add @your-scope/flexible
+yarn add @cherrywind/flexible
 # 或
-pnpm add @your-scope/flexible
+pnpm add @cherrywind/flexible
 ```
 
 ## 使用方法
@@ -28,7 +28,7 @@ pnpm add @your-scope/flexible
 ### 基础用法
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 // 使用默认设置初始化
 const cleanup = flexible();
@@ -40,7 +40,7 @@ cleanup();
 ### 自定义配置
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
@@ -99,7 +99,7 @@ cleanup();
 ### 基础示例
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 // 使用默认设置初始化
 const cleanup = flexible();
@@ -111,7 +111,7 @@ const cleanup = flexible();
 ### 自定义断点示例
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
@@ -123,7 +123,7 @@ const cleanup = flexible({
 ### 自定义作用域示例
 
 ```typescript
-import { flexible } from '@your-scope/flexible';
+import { flexible } from '@cherrywind/flexible';
 
 const container = document.querySelector('.container');
 const cleanup = flexible({

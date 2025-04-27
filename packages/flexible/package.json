@@ -1,13 +1,13 @@
 {
   "name": "@cherrywind/flexible",
-  "version": "0.0.2-alpha",
+  "version": "0.0.2-beta",
   "private": false,
   "keywords": [
     "flexible"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/susanforme/utils"
+    "url": "https://github.com/susanforme/utils/tree/master/packages/flexible"
   },
   "license": "MIT",
   "type": "module",
