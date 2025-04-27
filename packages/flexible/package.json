@@ -1,20 +1,16 @@
 {
-  "name": "@cherrywind/postcss",
+  "name": "@cherrywind/flexible",
   "version": "0.0.2-alpha",
   "private": false,
   "keywords": [
-    "postcss",
-    "postcss-plugin",
-    "rem",
-    "css-variables",
-    "postcss8"
+    "flexible"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/susanforme/utils"
   },
   "license": "MIT",
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     "require": "./dist/index.cjs",
     "import": "./dist/index.js"
@@ -31,11 +27,5 @@
     "release": "changeset",
     "test": "vitest run",
     "test:watch": "vitest"
-  },
-  "devDependencies": {
-    "postcss": "^8.0.0"
-  },
-  "peerDependencies": {
-    "postcss": "^8.0.0"
   }
 }

@@ -139,6 +139,12 @@ importers:
         specifier: ^3.1.1
         version: 3.1.2(@types/node@22.15.2)(jsdom@26.1.0)(less@4.3.0)
 
+  packages/flexible:
+    devDependencies:
+      postcss:
+        specifier: ^8.0.0
+        version: 8.5.3
+
   packages/postcss:
     devDependencies:
       postcss:

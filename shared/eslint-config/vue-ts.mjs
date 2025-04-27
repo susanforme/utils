@@ -1,5 +1,5 @@
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
-import { config as vueConfig } from './vue.js';
+import { config as vueConfig } from './vue.mjs';
 /**
  * A custom ESLint configuration for libraries that use Next.js.
  *

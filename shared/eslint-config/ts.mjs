@@ -1,6 +1,10 @@
 import path from 'path';
 import tseslint from 'typescript-eslint';
-import { config as baseConfig } from './base.js';
+import { fileURLToPath } from 'url';
+import { config as baseConfig } from './base.mjs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 /**
  * A custom ESLint configuration for libraries that use Next.js.
  *
@@ -13,7 +17,7 @@ export const config = tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: {},
-        tsconfigRootDir: path.resolve(import.meta.dirname, '../../'),
+        tsconfigRootDir: path.resolve(__dirname, '../../'),
       },
     },
   },
