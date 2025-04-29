@@ -63,13 +63,17 @@ export interface FlexibleOptions {
  */
 export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const {
-    breakpoints = [768],
-    layouts,
-    basicLayout = layouts?.at(-1),
+    breakpoints: propBreakpoints = [768],
+    layouts: propLayouts,
+    basicLayout: propBasicLayout,
     scope,
     immediate = false,
     orientationchange = true,
   } = options;
+  // Sort breakpoints and layouts in ascending order
+  const breakpoints = propBreakpoints.sort((a, b) => a - b);
+  const layouts = propLayouts?.sort((a, b) => a - b);
+  const basicLayout = propBasicLayout ?? layouts?.at(-1);
 
   /**
    * Calculate the ratio factor for a specific breakpoint
@@ -96,7 +100,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     for (let i = 0; i < breakpoints.length; i++) {
       if (width <= breakpoints[i]) {
         // Should use layouts[i] as the base
-        vw = width * getBreakpointRatio(i);
+        vw = vw * getBreakpointRatio(i);
         break;
       }
     }
