@@ -8,6 +8,7 @@ export default defineConfig({
       entry: ['src/index.ts'],
       formats: ['es', 'cjs'],
     },
+    sourcemap: true,
   },
   plugins: [
     dts({
