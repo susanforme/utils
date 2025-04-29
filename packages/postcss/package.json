@@ -1,6 +1,6 @@
 {
   "name": "@cherrywind/postcss",
-  "version": "0.0.2-alpha",
+  "version": "0.0.2-alpha.1",
   "private": false,
   "keywords": [
     "postcss",
@@ -14,7 +14,7 @@
     "url": "https://github.com/susanforme/utils"
   },
   "license": "MIT",
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     "require": "./dist/index.cjs",
     "import": "./dist/index.js"
