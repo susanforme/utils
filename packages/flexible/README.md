@@ -12,6 +12,8 @@ A lightweight and flexible layout system for responsive web design, inspired by 
 - 🎯 Customizable breakpoints
 - 🎨 CSS variable support
 - 🧹 Clean API with cleanup function
+- ⚡ Immediate layout application
+- 📐 Orientation change support
 
 ## Installation
 
@@ -44,8 +46,10 @@ import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
-  containers: [1920, 1024, 768],
-  basicContainer: 1920,
+  layouts: [375, 1024, 1920],
+  basicLayout: 1920,
+  immediate: true,
+  orientationchange: false,
   scope: {
     element: document.querySelector('.container'),
     cssVarName: '--custom-rem'
@@ -65,22 +69,49 @@ interface FlexibleOptions {
    */
   breakpoints?: number[];
   /**
-   * An array of container widths that corresponds to breakpoints.
+   * An array of layout widths that corresponds to breakpoints.
    * Must have exactly one more item than breakpoints array.
+   * For example, if breakpoints is [768], layouts could be [375, 1920],
+   * where 375 is the width for viewport <= 768px and 1920 is for viewport > 768px.
    */
-  containers?: number[];
+  layouts?: number[];
   /**
-   * The base container width used as reference for calculations.
-   * Defaults to the last item in containers array.
+   * The base layout width used as reference for calculations.
+   * Only effective when layouts is provided.
+   * Used as the baseline layout width for ratio calculations.
+   * Defaults to the last item in layouts array (layouts?.at(-1)),
+   * which typically represents the largest viewport width.
    */
-  basicContainer?: number;
+  basicLayout?: number;
+  /**
+   * Whether to apply the layout immediately on initialization.
+   * Defaults to false.
+   */
+  immediate?: boolean;
+  /**
+   * Whether to listen for orientation change events.
+   * Defaults to true.
+   */
+  orientationchange?: boolean;
   /**
    * Whether to set the CSS variable on a specific scope element.
+   * Defaults to false, which means setting the font size on the document element.
+   * If an object is provided, it can specify the element and CSS variable name.
    */
-  scope?: {
-    element?: HTMLElement;
-    cssVarName?: string;
-  } | false;
+  scope?:
+    | false
+    | {
+        /**
+         * The scope element to set the CSS variable on.
+         * Defaults to document.documentElement.
+         */
+        element?: HTMLElement;
+        /**
+         * The CSS variable name to use for the base rem value.
+         * Defaults to "--local-scope-rem".
+         */
+        cssVarName?: string;
+      };
 }
 ```
 
@@ -115,8 +146,8 @@ import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
-  containers: [1920, 1024, 768],
-  basicContainer: 1920
+  layouts: [375, 1024, 1920],
+  basicLayout: 1920
 });
 ```
 
@@ -131,6 +162,28 @@ const cleanup = flexible({
     element: container,
     cssVarName: '--container-rem'
   }
+});
+```
+
+### Immediate Layout Example
+
+```typescript
+import { flexible } from '@cherrywind/flexible';
+
+// Apply layout immediately without waiting for load event
+const cleanup = flexible({
+  immediate: true
+});
+```
+
+### Disable Orientation Change Example
+
+```typescript
+import { flexible } from '@cherrywind/flexible';
+
+// Disable orientation change handling
+const cleanup = flexible({
+  orientationchange: false
 });
 ```
 

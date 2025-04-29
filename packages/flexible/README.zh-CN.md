@@ -12,6 +12,8 @@
 - 🎯 可自定义断点
 - 🎨 支持 CSS 变量
 - 🧹 提供清理函数的简洁 API
+- ⚡ 支持立即应用布局
+- 📐 支持屏幕方向变化
 
 ## 安装
 
@@ -44,8 +46,10 @@ import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
-  containers: [1920, 1024, 768],
-  basicContainer: 1920,
+  layouts: [375, 1024, 1920],
+  basicLayout: 1920,
+  immediate: true,
+  orientationchange: false,
   scope: {
     element: document.querySelector('.container'),
     cssVarName: '--custom-rem'
@@ -65,22 +69,49 @@ interface FlexibleOptions {
    */
   breakpoints?: number[];
   /**
-   * 与断点对应的容器宽度数组。
+   * 与断点对应的布局宽度数组。
    * 数组长度必须比断点数组多一个。
+   * 例如，如果断点是 [768]，布局可以是 [375, 1920]，
+   * 其中 375 是视口宽度 <= 768px 时的宽度，1920 是视口宽度 > 768px 时的宽度。
    */
-  containers?: number[];
+  layouts?: number[];
   /**
-   * 用于计算的基础容器宽度。
-   * 默认为 containers 数组的最后一项。
+   * 用于计算的基础布局宽度。
+   * 仅在提供 layouts 时有效。
+   * 用作比例计算的基础布局宽度。
+   * 默认为 layouts 数组的最后一项（layouts?.at(-1)），
+   * 通常代表最大的视口宽度。
    */
-  basicContainer?: number;
+  basicLayout?: number;
+  /**
+   * 是否在初始化时立即应用布局。
+   * 默认为 false。
+   */
+  immediate?: boolean;
+  /**
+   * 是否监听屏幕方向变化事件。
+   * 默认为 true。
+   */
+  orientationchange?: boolean;
   /**
    * 是否在特定作用域元素上设置 CSS 变量。
+   * 默认为 false，表示在文档元素上设置字体大小。
+   * 如果提供对象，可以指定元素和 CSS 变量名。
    */
-  scope?: {
-    element?: HTMLElement;
-    cssVarName?: string;
-  } | false;
+  scope?:
+    | false
+    | {
+        /**
+         * 设置 CSS 变量的作用域元素。
+         * 默认为 document.documentElement。
+         */
+        element?: HTMLElement;
+        /**
+         * 用于基础 rem 值的 CSS 变量名。
+         * 默认为 "--local-scope-rem"。
+         */
+        cssVarName?: string;
+      };
 }
 ```
 
@@ -115,8 +146,8 @@ import { flexible } from '@cherrywind/flexible';
 
 const cleanup = flexible({
   breakpoints: [1024, 768],
-  containers: [1920, 1024, 768],
-  basicContainer: 1920
+  layouts: [375, 1024, 1920],
+  basicLayout: 1920
 });
 ```
 
@@ -134,6 +165,28 @@ const cleanup = flexible({
 });
 ```
 
+### 立即应用布局示例
+
+```typescript
+import { flexible } from '@cherrywind/flexible';
+
+// 立即应用布局，不等待 load 事件
+const cleanup = flexible({
+  immediate: true
+});
+```
+
+### 禁用屏幕方向变化示例
+
+```typescript
+import { flexible } from '@cherrywind/flexible';
+
+// 禁用屏幕方向变化处理
+const cleanup = flexible({
+  orientationchange: false
+});
+```
+
 ## 许可证
 
-MIT 
+MIT

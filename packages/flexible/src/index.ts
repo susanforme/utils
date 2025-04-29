@@ -8,20 +8,31 @@ export interface FlexibleOptions {
    */
   breakpoints?: number[];
   /**
-   * An array of container widths that corresponds to breakpoints.
+   * An array of layout widths that corresponds to breakpoints.
    * Must have exactly one more item than breakpoints array.
-   * For example, if breakpoints is [768], containers could be [375, 1920],
+   * For example, if breakpoints is [768], layouts could be [375, 1920],
    * where 375 is the width for viewport <= 768px and 1920 is for viewport > 768px.
    */
-  containers?: number[];
+  layouts?: number[];
   /**
-   * The base container width used as reference for calculations.
-   * Only effective when containers is provided.
-   * Used as the baseline container width for ratio calculations.
-   * Defaults to the last item in containers array (containers?.at(-1)),
+   * The base layout width used as reference for calculations.
+   * Only effective when layouts is provided.
+   * Used as the baseline layout width for ratio calculations.
+   * Defaults to the last item in layouts array (layouts?.at(-1)),
    * which typically represents the largest viewport width.
    */
-  basicContainer?: number;
+  basicLayout?: number;
+  /**
+   * Whether to apply the layout immediately on initialization.
+   * Defaults to false.
+   */
+  immediate?: boolean;
+  /**
+   * Whether to listen for orientation change events.
+   * Defaults to true.
+   */
+  orientationchange?: boolean;
+
   /**
    * Whether to set the CSS variable on a specific scope element.
    * Defaults to false, which means setting the font size on the document element.
@@ -51,7 +62,14 @@ export interface FlexibleOptions {
  * @returns A cleanup function to remove event listeners
  */
 export const flexible = (options: FlexibleOptions = {}): (() => void) => {
-  const { breakpoints = [768], containers, basicContainer = containers?.at(-1), scope } = options;
+  const {
+    breakpoints = [768],
+    layouts,
+    basicLayout = layouts?.at(-1),
+    scope,
+    immediate = false,
+    orientationchange = true,
+  } = options;
 
   /**
    * Calculate the ratio factor for a specific breakpoint
@@ -59,9 +77,9 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
    * @returns The ratio factor, defaults to 1
    */
   const getBreakpointRatio = (index: number): number => {
-    if (!containers || !basicContainer) return 1;
-    if (containers.length - 1 === breakpoints.length) {
-      return basicContainer / containers[index];
+    if (!layouts || !basicLayout) return 1;
+    if (layouts.length - 1 === breakpoints.length) {
+      return basicLayout / layouts[index];
     }
     return 1; // Default to ratio factor of 1
   };
@@ -77,29 +95,37 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
 
     for (let i = 0; i < breakpoints.length; i++) {
       if (width <= breakpoints[i]) {
-        // Should use containers[i] as the base
+        // Should use layouts[i] as the base
         vw = width * getBreakpointRatio(i);
         break;
       }
     }
     if (scope) {
       const { element = document.documentElement, cssVarName = '--local-scope-rem' } = scope;
-      // Set the CSS variable --local-scope-rem for the container
+      // Set the CSS variable --local-scope-rem for the element
       element.style.setProperty(cssVarName, vw + 'px');
     } else {
       html.style.fontSize = vw + 'px';
     }
   };
 
-  // Register event listeners
-  window.addEventListener('load', responsive);
+  if (immediate) {
+    responsive();
+  } else {
+    window.addEventListener('load', responsive);
+  }
   window.addEventListener('resize', responsive);
-  window.addEventListener('orientationchange', responsive);
-
+  if (orientationchange) {
+    screen.orientation.addEventListener('change', responsive);
+  }
   // Return cleanup function
   return () => {
-    window.removeEventListener('load', responsive);
+    if (!immediate) {
+      window.removeEventListener('load', responsive);
+    }
     window.removeEventListener('resize', responsive);
-    window.removeEventListener('orientationchange', responsive);
+    if (orientationchange) {
+      screen.orientation.removeEventListener('change', responsive);
+    }
   };
 };
