@@ -92,8 +92,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
    * Respond to window size changes and update CSS variable
    */
   const responsive = (): void => {
-    const html = document.documentElement;
-    const width = html.clientWidth;
+    const width = window.innerWidth;
     // 100rem = 100vw = design width
     let vw = width / 100;
 
@@ -109,7 +108,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
       // Set the CSS variable --local-scope-rem for the element
       element.style.setProperty(cssVarName, vw + 'px');
     } else {
-      html.style.fontSize = vw + 'px';
+      document.documentElement.style.fontSize = vw + 'px';
     }
   };
 
