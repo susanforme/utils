@@ -53,6 +53,18 @@ export interface FlexibleOptions {
         cssVarName?: string;
       };
 }
+function getScrollbarWidth(): number {
+  const scrollDiv = document.createElement('div');
+  scrollDiv.style.width = '100px';
+  scrollDiv.style.height = '100px';
+  scrollDiv.style.overflow = 'scroll';
+  scrollDiv.style.position = 'absolute';
+  scrollDiv.style.top = '-9999px';
+  document.body.appendChild(scrollDiv);
+  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  document.body.removeChild(scrollDiv);
+  return scrollbarWidth;
+}
 
 /**
  * Initializes a flexible layout system that sets a CSS variable for rem units
@@ -74,6 +86,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const breakpoints = propBreakpoints.sort((a, b) => a - b);
   const layouts = propLayouts?.sort((a, b) => a - b);
   const basicLayout = propBasicLayout ?? layouts?.at(-1);
+  const scrollbarWidth = getScrollbarWidth();
 
   /**
    * Calculate the ratio factor for a specific breakpoint
@@ -93,8 +106,9 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
    */
   const responsive = (): void => {
     const width = window.innerWidth;
+    const effectiveWidth = window.innerWidth - scrollbarWidth;
     // 100rem = 100vw = design width
-    let vw = width / 100;
+    let vw = effectiveWidth / 100;
 
     for (let i = 0; i < breakpoints.length; i++) {
       if (width <= breakpoints[i]) {
