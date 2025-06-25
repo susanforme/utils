@@ -52,6 +52,13 @@ export interface FlexibleOptions {
          */
         cssVarName?: string;
       };
+
+  /**
+   * An array of ratio factors for each layout, used for poster mode or custom scaling.
+   * Must have the same length as layouts.
+   * Defaults to [1, 1, ...] (no extra scaling).
+   */
+  ratio?: number[];
 }
 function getScrollbarWidth(): number {
   const scrollDiv = document.createElement('div');
@@ -81,12 +88,20 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     scope,
     immediate = false,
     orientationchange = true,
+    ratio: propRatio,
   } = options;
-  // Sort breakpoints and layouts in ascending order
-  const breakpoints = propBreakpoints.sort((a, b) => a - b);
-  const layouts = propLayouts?.sort((a, b) => a - b);
+  const breakpoints = propBreakpoints;
+  const layouts = propLayouts;
   const basicLayout = propBasicLayout ?? layouts?.at(-1);
   const scrollbarWidth = getScrollbarWidth();
+
+  // Ensure ratio array matches layouts length, default to 1
+  let ratio = propRatio;
+  if (ratio) {
+    if (layouts?.length !== ratio.length && layouts) {
+      ratio = [...ratio, ...new Array<number>(layouts.length - ratio.length).fill(1)];
+    }
+  }
 
   /**
    * Calculate the ratio factor for a specific breakpoint
@@ -109,12 +124,18 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     const effectiveWidth = window.innerWidth - scrollbarWidth;
     // 100rem = 100vw = design width
     let vw = effectiveWidth / 100;
-
-    for (let i = 0; i < breakpoints.length; i++) {
-      if (width <= breakpoints[i]) {
-        // Should use layouts[i] as the base
-        vw = vw * getBreakpointRatio(i);
-        break;
+    let matched = false;
+    if (layouts) {
+      for (let i = 0; i < breakpoints.length; i++) {
+        if (width <= breakpoints[i]) {
+          vw = vw * getBreakpointRatio(i) * (ratio?.[i] ?? 1);
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        // 大于所有 breakpoints，使用最后一个 layout 和 ratio
+        vw = vw * getBreakpointRatio(layouts.length - 1) * (ratio?.[layouts.length - 1] ?? 1);
       }
     }
     if (scope) {
