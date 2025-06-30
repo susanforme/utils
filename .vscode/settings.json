@@ -12,6 +12,7 @@
     "persistedstate",
     "Pinia",
     "popconfirm",
+    "pxtorem",
     "rushstack",
     "SDLK",
     "unplugin",
@@ -20,9 +21,9 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   // 根目录run
-  "npm.exclude": [
-    "**/packages/**",
-  ],
+  // "npm.exclude": [
+  //   "**/packages/**",
+  // ],
   "files.readonlyInclude": {
     "**/node_modules/**": true,
     "**/dist/**": true,
