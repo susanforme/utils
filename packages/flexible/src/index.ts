@@ -78,19 +78,6 @@ export interface FlexibleOptions {
    */
   ratio?: number[];
 }
-function getScrollbarWidth(): number {
-  const scrollDiv = document.createElement('div');
-  scrollDiv.style.width = '100px';
-  scrollDiv.style.height = '100px';
-  scrollDiv.style.overflow = 'scroll';
-  scrollDiv.style.position = 'absolute';
-  scrollDiv.style.top = '-9999px';
-  scrollDiv.style.opacity = '0';
-  document.body.appendChild(scrollDiv);
-  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  document.body.removeChild(scrollDiv);
-  return scrollbarWidth;
-}
 
 /**
  * Initializes a flexible layout system that sets a CSS variable for rem units
@@ -112,7 +99,6 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const breakpoints = propBreakpoints;
   const layouts = propLayouts;
   const basicLayout = propBasicLayout ?? layouts?.at(-1);
-  const scrollbarWidth = getScrollbarWidth();
   const defaultScopeCssVarName = '--local-scope-rem';
 
   // Ensure ratio array matches layouts length, default to 1
@@ -144,7 +130,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     /**
      * Calculate the effective width by subtracting the scrollbar width from the window width
      */
-    const effectiveWidth = window.innerWidth - scrollbarWidth;
+    const effectiveWidth = document.documentElement.clientWidth;
     // 100rem = 100vw = design width
     let vw = effectiveWidth / 100;
     let matched = false;
