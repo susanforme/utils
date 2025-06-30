@@ -57,6 +57,12 @@ describe('postcssPxToRem 插件', () => {
     );
   });
 
+  it('mediaQuery: false 不转换媒体查询中的 px', async () => {
+    const input = `@media (min-width: 320px) { .a { margin: 16px; } }`;
+    const output = await postcss([postcssPxToRem({ mediaQuery: false })]).process(input, { from: undefined });
+    expect(output.css).toBe(`@media (min-width: 320px) { .a { margin: calc(var(--local-scope-rem, 1rem) * 1); } }`);
+  });
+
   it('遇到 /* pxtorem-disable-next-line */ 注释应跳过转换', async () => {
     const input = `/* pxtorem-disable-next-line */\n.a { margin: 16px; }\n.b { margin: 16px; }`;
     const output = await postcss([postcssPxToRem()]).process(input, { from: undefined });

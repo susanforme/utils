@@ -1,0 +1,8 @@
+.simple {
+  font-size: 16px;
+  margin: 10px;
+  padding: 20px 30px;
+  border: 1px solid black;
+  width: 200px;
+  height: 100px;
+}

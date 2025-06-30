@@ -1,6 +1,6 @@
 {
   "name": "@cherrywind/postcss",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.3",
   "private": false,
   "keywords": [
     "postcss",
@@ -27,13 +27,16 @@
     "build": "tsc && vite build",
     "dev": "vite",
     "lint": "cross-env oxlint && eslint \"{src,test}/**/*.{ts,tsx}\" --config eslint.config.mjs",
+    "generate": "tsx ./src/px-to-local-var/gen-fixtures.cts",
     "preview": "vite preview",
     "release": "changeset",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "postcss": "^8.0.0"
+    "postcss": "^8.0.0",
+    "postcss-less": "^6.0.0",
+    "postcss-scss": "^4.0.9"
   },
   "peerDependencies": {
     "postcss": "^8.0.0"

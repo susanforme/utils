@@ -1,0 +1,16 @@
+@base-size: 10px;
+
+.less-rule {
+  font-size: @base-size * 2; // 20px
+  margin: @base-size; // 10px
+
+  .nested {
+    padding: (@base-size / 2); // 5px
+  }
+  .some {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 1rem;
+    width: 10vw;
+  }
+}
