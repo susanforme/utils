@@ -92,6 +92,7 @@ export interface FlexibleOptions {
         delay?: number;
       }
     | false;
+  onInitialized?: () => void;
 }
 
 /**
@@ -112,6 +113,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     ratio: propRatio,
     recalibrate = true,
     resizeOption,
+    onInitialized,
   } = options;
   const breakpoints = propBreakpoints;
   const layouts = propLayouts;
@@ -204,8 +206,16 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   }
   if (immediate) {
     responsive();
+    requestAnimationFrame(() => {
+      onInitialized?.();
+    });
   } else {
-    window.addEventListener('load', responsive);
+    window.addEventListener('load', () => {
+      responsive();
+      requestAnimationFrame(() => {
+        onInitialized?.();
+      });
+    });
   }
   window.addEventListener('resize', resizeHandler);
   if (orientationchange) {
@@ -213,9 +223,6 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   }
   // 返回清理函数
   return () => {
-    if (!immediate) {
-      window.removeEventListener('load', responsive);
-    }
     window.removeEventListener('resize', resizeHandler);
     if (orientationchange) {
       screen.orientation.removeEventListener('change', resizeHandler);
