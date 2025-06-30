@@ -45,13 +45,31 @@ export interface FlexibleOptions {
          * The scope element to set the CSS variable on.
          * Defaults to document.documentElement.
          */
-        element?: HTMLElement;
+        element: HTMLElement;
         /**
          * The CSS variable name to use for the base rem value.
          * Defaults to "--local-scope-rem".
          */
         cssVarName?: string;
-      };
+      }
+    | {
+        /**
+         * The scope element to set the CSS variable on.
+         * Defaults to document.documentElement.
+         */
+        element: HTMLElement;
+        /**
+         * An array of ratio factors for each layout, used for poster mode or custom scaling.
+         * Must have the same length as layouts.
+         * Defaults to [1, 1, ...] (no extra scaling).
+         */
+        ratio?: number[];
+        /**
+         * The CSS variable name to use for the base rem value.
+         * Defaults to "--local-scope-rem".
+         */
+        cssVarName?: string;
+      }[];
 
   /**
    * An array of ratio factors for each layout, used for poster mode or custom scaling.
@@ -67,6 +85,7 @@ function getScrollbarWidth(): number {
   scrollDiv.style.overflow = 'scroll';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.top = '-9999px';
+  scrollDiv.style.opacity = '0';
   document.body.appendChild(scrollDiv);
   const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   document.body.removeChild(scrollDiv);
@@ -94,6 +113,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const layouts = propLayouts;
   const basicLayout = propBasicLayout ?? layouts?.at(-1);
   const scrollbarWidth = getScrollbarWidth();
+  const defaultScopeCssVarName = '--local-scope-rem';
 
   // Ensure ratio array matches layouts length, default to 1
   let ratio = propRatio;
@@ -121,27 +141,42 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
    */
   const responsive = (): void => {
     const width = window.innerWidth;
+    /**
+     * Calculate the effective width by subtracting the scrollbar width from the window width
+     */
     const effectiveWidth = window.innerWidth - scrollbarWidth;
     // 100rem = 100vw = design width
     let vw = effectiveWidth / 100;
     let matched = false;
+    let matchedIndex = 0;
     if (layouts) {
       for (let i = 0; i < breakpoints.length; i++) {
         if (width <= breakpoints[i]) {
           vw = vw * getBreakpointRatio(i) * (ratio?.[i] ?? 1);
           matched = true;
+          matchedIndex = i;
           break;
         }
       }
       if (!matched) {
-        // 大于所有 breakpoints，使用最后一个 layout 和 ratio
+        // If no breakpoint is matched, use the last layout
         vw = vw * getBreakpointRatio(layouts.length - 1) * (ratio?.[layouts.length - 1] ?? 1);
+        matchedIndex = layouts.length - 1;
       }
     }
     if (scope) {
-      const { element = document.documentElement, cssVarName = '--local-scope-rem' } = scope;
-      // Set the CSS variable --local-scope-rem for the element
-      element.style.setProperty(cssVarName, vw + 'px');
+      if (Array.isArray(scope)) {
+        // Set the CSS variable --local-scope-rem for every element
+        scope.forEach((item) => {
+          const { element = document.documentElement, cssVarName = defaultScopeCssVarName, ratio: scopeRatio } = item;
+          const computedRatio = scopeRatio?.[matchedIndex] ?? ratio?.[matchedIndex] ?? 1;
+          element.style.setProperty(cssVarName, vw * computedRatio + 'px');
+        });
+      } else {
+        const { element = document.documentElement, cssVarName = defaultScopeCssVarName } = scope;
+        // Set the CSS variable --local-scope-rem for the element
+        element.style.setProperty(cssVarName, vw + 'px');
+      }
     } else {
       document.documentElement.style.fontSize = vw + 'px';
     }
