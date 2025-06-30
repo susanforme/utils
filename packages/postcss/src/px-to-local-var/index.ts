@@ -4,14 +4,14 @@ import { DISABLE_COMMENT_REG } from './lib/constant';
 import { createPropListMatcher } from './lib/filter-prop-list';
 import pixelUnitRegex from './lib/pixel-unit-regex';
 
-export interface PxToRemOptions {
+export interface PxToLocalVarOptions {
   /**
-   * rem 的根元素字体大小，计算 rem 值的基准 (rem = px / rootValue)。
+   *  scope rem的根元素字体大小，计算 scope rem 值的基准 (vw = px / rootValue)。
    * @default 16
    */
   rootValue?: number;
   /**
-   * 转换后 rem 值的小数点位数。
+   * 转换后 scope rem 值的小数点位数。
    * @default 5
    */
   unitPrecision?: number;
@@ -52,7 +52,7 @@ export interface PxToRemOptions {
   varName?: string;
 }
 
-const defaults: Required<PxToRemOptions> = {
+const defaults: Required<PxToLocalVarOptions> = {
   rootValue: 16,
   unitPrecision: 5,
   selectorBlackList: [],
@@ -64,7 +64,7 @@ const defaults: Required<PxToRemOptions> = {
   varName: '--local-scope-rem',
 };
 
-function shouldExclude(exclude: PxToRemOptions['exclude'], file?: string) {
+function shouldExclude(exclude: PxToLocalVarOptions['exclude'], file?: string) {
   if (!exclude || !file) return false;
   if (typeof exclude === 'function') return exclude(file);
   if (exclude instanceof RegExp) return exclude.test(file);
@@ -75,7 +75,7 @@ function toFixed(number: number, precision: number) {
   return parseFloat(number.toFixed(precision)).toString();
 }
 
-function createPxReplace(opts: Required<PxToRemOptions>) {
+function createPxReplace(opts: Required<PxToLocalVarOptions>) {
   return function (m: string, $1: string) {
     if (!$1) return m;
     const pixels = parseFloat($1);
@@ -108,13 +108,13 @@ function hasDisableNextLineComment(decl: Declaration): boolean {
   return false;
 }
 
-export const postcssPxToRem = (options: PxToRemOptions = {}): Plugin => {
+export const postcssPxToLocalVar = (options: PxToLocalVarOptions = {}): Plugin => {
   const opts = { ...defaults, ...options };
   const propListMatch = createPropListMatcher(opts.propList);
   const isBlackSelector = createSelectorBlackList(opts.selectorBlackList);
 
   return {
-    postcssPlugin: 'postcss-px-to-rem',
+    postcssPlugin: 'postcss-px-to-local-var',
     Once(root: Root) {
       const file = root.source?.input.file;
       if (shouldExclude(opts.exclude, file)) return;
@@ -145,4 +145,4 @@ export const postcssPxToRem = (options: PxToRemOptions = {}): Plugin => {
     },
   };
 };
-postcssPxToRem.postcss = true;
+postcssPxToLocalVar.postcss = true;

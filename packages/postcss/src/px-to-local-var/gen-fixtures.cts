@@ -3,7 +3,7 @@ import path from 'path';
 import postcss, { AcceptedPlugin } from 'postcss';
 import less from 'postcss-less';
 import scss from 'postcss-scss';
-import { PxToRemOptions, postcssPxToRem } from '.';
+import { PxToLocalVarOptions, postcssPxToLocalVar } from '.';
 
 const cssDir = path.join(__dirname, 'css');
 const cacheDir = path.join(__dirname, 'cache');
@@ -14,7 +14,11 @@ const parsers: Record<string, any> = {
   '.scss': scss,
 };
 
-async function processFile(file: string, opts: PxToRemOptions, plugin: (options: PxToRemOptions) => AcceptedPlugin) {
+async function processFile(
+  file: string,
+  opts: PxToLocalVarOptions,
+  plugin: (options: PxToLocalVarOptions) => AcceptedPlugin,
+) {
   const ext = path.extname(file);
   const content = fs.readFileSync(file, 'utf8');
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -53,7 +57,7 @@ async function main() {
       {
         replace: false,
       },
-      postcssPxToRem,
+      postcssPxToLocalVar,
     );
   }
 }
