@@ -108,6 +108,9 @@ function hasDisableNextLineComment(decl: Declaration): boolean {
   return false;
 }
 
+/**
+ *  px 转换为 局部 rem 插件
+ */
 export const postcssPxToLocalVar = (options: PxToLocalVarOptions = {}): Plugin => {
   const opts = { ...defaults, ...options };
   const propListMatch = createPropListMatcher(opts.propList);

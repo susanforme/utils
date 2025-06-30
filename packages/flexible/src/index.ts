@@ -1,90 +1,90 @@
 /**
- * Options for the flexible layout function.
+ * 弹性布局函数的配置选项。
  */
 export interface FlexibleOptions {
   /**
-   * An array of breakpoints in pixels, from largest to smallest.
-   * Defaults to [768].
+   * 一个以像素为单位的断点数组，从大到小排列。
+   * 默认为 [768]。
    */
   breakpoints?: number[];
   /**
-   * An array of layout widths that corresponds to breakpoints.
-   * Must have exactly one more item than breakpoints array.
-   * For example, if breakpoints is [768], layouts could be [375, 1920],
-   * where 375 is the width for viewport <= 768px and 1920 is for viewport > 768px.
+   * 一个与断点相对应的布局宽度数组。
+   * 其项目数量必须比断点数组多一个。
+   * 例如，如果 breakpoints 是 [768]，则 layouts 可以是 [375, 1920]，
+   * 其中 375 是视口宽度 <= 768px 时的布局宽度，1920 是视口宽度 > 768px 时的布局宽度。
    */
   layouts?: number[];
   /**
-   * The base layout width used as reference for calculations.
-   * Only effective when layouts is provided.
-   * Used as the baseline layout width for ratio calculations.
-   * Defaults to the last item in layouts array (layouts?.at(-1)),
-   * which typically represents the largest viewport width.
+   * 用作计算参考的基础布局宽度。
+   * 仅在提供了 layouts 时有效。
+   * 用作比例计算的基准布局宽度。
+   * 默认为 layouts 数组中的最后一项 (layouts?.at(-1))，
+   * 这通常代表最大的视口宽度。
    */
   basicLayout?: number;
   /**
-   * Whether to apply the layout immediately on initialization.
-   * Defaults to false.
+   * 是否在初始化时立即应用布局。
+   * 默认为 false。
    */
   immediate?: boolean;
   /**
-   * Whether to listen for orientation change events.
-   * Defaults to true.
+   * 是否监听屏幕方向变化事件。
+   * 默认为 true。
    */
   orientationchange?: boolean;
 
   /**
-   * Whether to set the CSS variable on a specific scope element.
-   * Defaults to false, which means setting the font size on the document element.
-   * If an object is provided, it can specify the element and CSS variable name.
+   * 是否在特定的作用域元素上设置 CSS 变量。
+   * 默认为 false，表示在 document 元素上设置字体大小。
+   * 如果提供一个对象，可以指定元素和 CSS 变量名。
    */
   scope?:
     | false
     | {
         /**
-         * The scope element to set the CSS variable on.
-         * Defaults to document.documentElement.
+         * 设置 CSS 变量的作用域元素。
+         * 默认为 document.documentElement。
          */
         element: HTMLElement;
         /**
-         * The CSS variable name to use for the base rem value.
-         * Defaults to "--local-scope-rem".
+         * 用于 rem 基础值的 CSS 变量名。
+         * 默认为 "--local-scope-rem"。
          */
         cssVarName?: string;
       }
     | {
         /**
-         * The scope element to set the CSS variable on.
-         * Defaults to document.documentElement.
+         * 设置 CSS 变量的作用域元素。
+         * 默认为 document.documentElement。
          */
         element: HTMLElement;
         /**
-         * An array of ratio factors for each layout, used for poster mode or custom scaling.
-         * Must have the same length as layouts.
-         * Defaults to [1, 1, ...] (no extra scaling).
+         * 每个布局的比例因子数组，用于海报模式或自定义缩放。
+         * 长度必须与 layouts 数组相同。
+         * 默认为 [1, 1, ...] (无额外缩放)。
          */
         ratio?: number[];
         /**
-         * The CSS variable name to use for the base rem value.
-         * Defaults to "--local-scope-rem".
+         * 用于 rem 基础值的 CSS 变量名。
+         * 默认为 "--local-scope-rem"。
          */
         cssVarName?: string;
       }[];
 
   /**
-   * An array of ratio factors for each layout, used for poster mode or custom scaling.
-   * Must have the same length as layouts.
-   * Defaults to [1, 1, ...] (no extra scaling).
+   * 每个布局的比例因子数组，用于海报模式或自定义缩放。
+   * 长度必须与 layouts 数组相同。
+   * 默认为 [1, 1, ...] (无额外缩放)。
    */
   ratio?: number[];
   /**
-   * Whether to recalibrate the layout when the window is resized.
+   * 是否在窗口大小调整时重新校准布局。
    * 因为宽度变化,但是css var没来得及变化导致出现滚动条,clientWidth和innerWidth不一致
-   * Defaults to true.
+   * 默认为 true。
    */
   recalibrate?: boolean;
   /**
-   * An option to control the resize behavior.
+   * 用于控制 resize 行为的选项。
    */
   resizeOption?:
     | {
@@ -95,11 +95,11 @@ export interface FlexibleOptions {
 }
 
 /**
- * Initializes a flexible layout system that sets a CSS variable for rem units
- * based on the viewport width and adaptively scales according to breakpoints.
+ * 初始化一个弹性布局系统，该系统会根据视口宽度设置一个用于 rem 单位的 CSS 变量，
+ * 并根据断点自适应缩放。
  *
- * @param options - Configuration options for the flexible layout
- * @returns A cleanup function to remove event listeners
+ * @param options - 弹性布局的配置选项
+ * @returns 一个用于移除事件监听器的清理函数
  */
 export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const {
@@ -120,7 +120,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   // 对于相同设备来说,滚动条要么永远占据宽度,要么永远不占据宽度
   const isScrollbarPresent = getScrollbarWidth() > 0;
 
-  // Ensure ratio array matches layouts length, default to 1
+  // 确保 ratio 数组的长度与 layouts 匹配，默认为 1
   let ratio = propRatio;
   if (ratio) {
     if (layouts?.length !== ratio.length && layouts) {
@@ -129,20 +129,20 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   }
 
   /**
-   * Calculate the ratio factor for a specific breakpoint
-   * @param index - Breakpoint index
-   * @returns The ratio factor, defaults to 1
+   * 计算特定断点的比例因子
+   * @param index - 断点索引
+   * @returns 比例因子，默认为 1
    */
   const getBreakpointRatio = (index: number): number => {
     if (!layouts || !basicLayout) return 1;
     if (layouts.length - 1 === breakpoints.length) {
       return basicLayout / layouts[index];
     }
-    return 1; // Default to ratio factor of 1
+    return 1; // 默认为 1 的比例因子
   };
 
   /**
-   * Respond to window size changes and update CSS variable
+   * 响应窗口大小变化并更新 CSS 变量
    */
   const responsive = (): void => {
     // 内部核心计算逻辑，可以被重复调用
@@ -211,7 +211,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   if (orientationchange) {
     screen.orientation.addEventListener('change', resizeHandler);
   }
-  // Return cleanup function
+  // 返回清理函数
   return () => {
     if (!immediate) {
       window.removeEventListener('load', responsive);
@@ -223,6 +223,12 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   };
 };
 
+/**
+ * 防抖函数：在事件被触发n秒后再执行回调，如果在这n秒内又被触发，则重新计时。
+ * @param func 要执行的函数
+ * @param wait 延迟时间（毫秒）
+ * @returns 防抖后的函数
+ */
 function debounce<F extends (...args: any[]) => any>(func: F, wait: number): F {
   let timeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -277,6 +283,10 @@ function throttle<T extends (...args: any[]) => void>(func: T, delay: number): (
   };
 }
 
+/**
+ * 计算浏览器滚动条的宽度。
+ * @returns {number} 滚动条的宽度（像素）
+ */
 function getScrollbarWidth(): number {
   const scrollDiv = document.createElement('div');
   scrollDiv.style.width = '100px';
