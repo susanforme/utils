@@ -79,7 +79,7 @@ function createPxReplace(opts: Required<PxToRemOptions>) {
   return function (m: string, $1: string) {
     if (!$1) return m;
     const pixels = parseFloat($1);
-    if (pixels <= opts.minPixelValue) return m;
+    if (Math.abs(pixels) <= opts.minPixelValue) return m;
     const remValue = toFixed(pixels / opts.rootValue, opts.unitPrecision);
     return `calc(var(${opts.varName}, 1rem) * ${remValue})`;
   };
