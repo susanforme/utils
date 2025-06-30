@@ -16,13 +16,12 @@ export interface PostcssRemToCssVarsOptions {
  *
  * @param opts - Plugin options.
  * @returns A PostCSS plugin instance.
- * @deprecated Use `postcss-px-to-local-var` instead.
  */
 export const postcssRemToCssVars = (opts: PostcssRemToCssVarsOptions = {}): Plugin => {
   const { varName = '--local-scope-rem' } = opts;
 
   return {
-    postcssPlugin: 'postcss-rem-to-local-var',
+    postcssPlugin: 'postcss-px-to-local-var',
     Declaration(decl) {
       if ((decl as any)._remToVarProcessed) return;
       // If the value has already been converted to calc(var(--local-scope-rem, 1rem) * 1), it should not be converted again
