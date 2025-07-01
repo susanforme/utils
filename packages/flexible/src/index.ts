@@ -78,12 +78,6 @@ export interface FlexibleOptions {
    */
   ratio?: number[];
   /**
-   * 是否在窗口大小调整时重新校准布局。
-   * 因为宽度变化,但是css var没来得及变化导致出现滚动条,clientWidth和innerWidth不一致
-   * 默认为 true。
-   */
-  recalibrate?: boolean;
-  /**
    * 用于控制 resize 行为的选项。
    */
   resizeOption?:
@@ -111,7 +105,6 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     immediate = false,
     orientationchange = true,
     ratio: propRatio,
-    recalibrate = true,
     resizeOption,
     onInitialized,
   } = options;
@@ -120,7 +113,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const basicLayout = propBasicLayout ?? layouts?.at(-1);
   const defaultScopeCssVarName = '--local-scope-rem';
   // 对于相同设备来说,滚动条要么永远占据宽度,要么永远不占据宽度
-  const isScrollbarPresent = getScrollbarWidth() > 0;
+  const scrollbarWidth = getScrollbarWidth();
 
   // 确保 ratio 数组的长度与 layouts 匹配，默认为 1
   let ratio = propRatio;
@@ -150,7 +143,9 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     // 内部核心计算逻辑，可以被重复调用
     const recalculate = () => {
       const width = window.innerWidth; // 用于断点匹配
-      const effectiveWidth = document.documentElement.clientWidth; // 用于rem计算
+      // const effectiveWidth = document.documentElement.clientWidth; // 用于rem计算
+      //TODO: ?没办法去判断滚动条的状态
+      const effectiveWidth = window.innerWidth - scrollbarWidth;
 
       let vw = effectiveWidth / 100;
       let matched = false;
@@ -189,9 +184,9 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     recalculate();
     // 第二次计算：请求在浏览器下一次重绘前再次计算。
     // 此时，clientWidth已经是重排后的稳定值。
-    if (recalibrate && isScrollbarPresent) {
-      requestAnimationFrame(recalculate);
-    }
+    // if (recalibrate && isScrollbarPresent) {
+    //   requestAnimationFrame(recalculate);
+    // }
   };
 
   let resizeHandler: () => void = responsive;
