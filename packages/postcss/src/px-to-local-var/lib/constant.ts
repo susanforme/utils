@@ -1,1 +1,1 @@
-export const DISABLE_COMMENT_REG = /pxtorem-disable-next-line/;
+export const DISABLE_COMMENT_REG = /pxtovar-disable-next-line/;

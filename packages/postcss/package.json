@@ -1,6 +1,6 @@
 {
   "name": "@cherrywind/postcss",
-  "version": "0.0.5",
+  "version": "0.0.5-alpha.2",
   "private": false,
   "keywords": [
     "postcss",

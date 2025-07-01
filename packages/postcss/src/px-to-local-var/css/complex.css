@@ -2,10 +2,10 @@
   margin: -10px;
   padding: 2.5px;
   border-width: 0.5px;
-  /* pxtorem-disable-next-line */
+  /* pxtovar-disable-next-line */
   line-height: 16px;
   font-size:
-   /* pxtorem-disable-next-line */ 15px;
+   /* pxtovar-disable-next-line */ 15px;
   left: -2px;
 }
 
