@@ -55,7 +55,7 @@ async function main() {
     await processFile(
       file,
       {
-        replace: false,
+        // replace: false,
       },
       postcssPxToLocalVar,
     );

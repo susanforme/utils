@@ -5,6 +5,7 @@
   /* pxtovar-disable-next-line */
   line-height: 16px;
   font-size:
+   /* 错误写法 */
    /* pxtovar-disable-next-line */ 15px;
   left: -2px;
 }
