@@ -142,7 +142,8 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   const responsive = (): void => {
     // 内部核心计算逻辑，可以被重复调用
     const recalculate = () => {
-      const width = window.innerWidth; // 用于断点匹配
+      //FIX: meta viewport 设置的 width 为 device-width 时，window.innerWidth 会比 window.visualViewport?.width 大
+      const viewportWidth = window.visualViewport?.width ?? window.innerWidth; // 用于断点匹配
       // const effectiveWidth = document.documentElement.clientWidth; // 用于rem计算
       //TODO: ?没办法去判断滚动条的状态
       const effectiveWidth = window.innerWidth - scrollbarWidth;
@@ -152,7 +153,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
       let matchedIndex = 0;
       if (layouts) {
         for (let i = 0; i < breakpoints.length; i++) {
-          if (width <= breakpoints[i]) {
+          if (viewportWidth <= breakpoints[i]) {
             vw = vw * getBreakpointRatio(i) * (ratio?.[i] ?? 1);
             matched = true;
             matchedIndex = i;
@@ -212,6 +213,12 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
       });
     });
   }
+  const visibilityHandler = () => {
+    if (document.visibilityState === 'visible') {
+      resizeHandler();
+    }
+  };
+  document.addEventListener('visibilitychange', visibilityHandler);
   window.addEventListener('resize', resizeHandler);
   if (orientationchange) {
     screen.orientation.addEventListener('change', resizeHandler);
@@ -219,6 +226,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   // 返回清理函数
   return () => {
     window.removeEventListener('resize', resizeHandler);
+    document.removeEventListener('visibilitychange', visibilityHandler);
     if (orientationchange) {
       screen.orientation.removeEventListener('change', resizeHandler);
     }
