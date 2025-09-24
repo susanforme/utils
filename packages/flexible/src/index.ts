@@ -223,14 +223,14 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
   document.addEventListener('visibilitychange', visibilityHandler);
   window.addEventListener('resize', resizeHandler);
   if (orientationchange) {
-    screen.orientation.addEventListener('change', resizeHandler);
+    screen.orientation?.addEventListener?.('change', resizeHandler);
   }
   // 返回清理函数
   return () => {
     window.removeEventListener('resize', resizeHandler);
     document.removeEventListener('visibilitychange', visibilityHandler);
     if (orientationchange) {
-      screen.orientation.removeEventListener('change', resizeHandler);
+      screen.orientation?.removeEventListener?.('change', resizeHandler);
     }
   };
 };
