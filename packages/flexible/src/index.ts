@@ -311,3 +311,20 @@ function getScrollbarWidth(): number {
   document.body.removeChild(scrollDiv);
   return scrollbarWidth;
 }
+
+/**
+ * 将像素值转换为响应式单位
+ * @param px 像素值
+ * @param options 配置选项
+ * @returns 响应式单位字符串
+ */
+export function px2Response(
+  px: number,
+  options: {
+    baseWidth?: number;
+    localVarName?: string;
+  },
+) {
+  const { baseWidth = 19.2, localVarName = '--local-scope-rem' } = options;
+  return `calc(${(px / baseWidth).toFixed(4)} * var(${localVarName}, 1rem))`;
+}
