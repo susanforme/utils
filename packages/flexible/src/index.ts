@@ -312,6 +312,9 @@ function getScrollbarWidth(classname?: string): number {
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.top = '-9999px';
   scrollDiv.style.display = 'block';
+  scrollDiv.style.visibility = 'hidden';
+  scrollDiv.style.pointerEvents = 'none';
+
   if (classname) {
     scrollDiv.classList.add(classname);
   }
