@@ -3,6 +3,10 @@
  */
 export interface FlexibleOptions {
   /**
+   *  用于检测滚动条宽度的类名。因为可能被全局样式影响。
+   */
+  scrollbarClassname?: string;
+  /**
    * 一个以像素为单位的断点数组，从大到小排列。
    * 默认为 [768]。
    */
@@ -107,13 +111,14 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     ratio: propRatio,
     resizeOption,
     onInitialized,
+    scrollbarClassname,
   } = options;
   const breakpoints = propBreakpoints;
   const layouts = propLayouts;
   const basicLayout = propBasicLayout ?? layouts?.at(-1);
   const defaultScopeCssVarName = '--local-scope-rem';
   // 对于相同设备来说,滚动条要么永远占据宽度,要么永远不占据宽度
-  const scrollbarWidth = getScrollbarWidth();
+  const scrollbarWidth = getScrollbarWidth(scrollbarClassname);
 
   // 确保 ratio 数组的长度与 layouts 匹配，默认为 1
   let ratio = propRatio;
@@ -299,13 +304,17 @@ function throttle<T extends (...args: any[]) => void>(func: T, delay: number): (
  * 计算浏览器滚动条的宽度。
  * @returns {number} 滚动条的宽度（像素）
  */
-function getScrollbarWidth(): number {
+function getScrollbarWidth(classname?: string): number {
   const scrollDiv = document.createElement('div');
   scrollDiv.style.width = '100px';
   scrollDiv.style.height = '100px';
   scrollDiv.style.overflow = 'scroll';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.top = '-9999px';
+  scrollDiv.style.display = 'block';
+  if (classname) {
+    scrollDiv.classList.add(classname);
+  }
   document.body.appendChild(scrollDiv);
   const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   document.body.removeChild(scrollDiv);
