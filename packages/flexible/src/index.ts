@@ -66,13 +66,9 @@ export interface FlexibleOptions {
      */
     matchedIndex: number;
     /**
-     * 原始计算得到的 vw 值（未经过任何比例调整）。
+     * 转换前计算得到的 vw 值。
      */
     originalVw: number;
-    /**
-     * 计算得到的比例因子。
-     */
-    computedRatio: number;
   }) => number;
 
   /**
@@ -198,7 +194,6 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
         vw = options.onTransform({
           matchedIndex,
           originalVw,
-          computedRatio: ratio?.[matchedIndex] ?? 1,
         });
       }
       if (scope) {
@@ -211,8 +206,7 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
               scopeVw = options.onTransform({
                 scope: item,
                 matchedIndex,
-                originalVw,
-                computedRatio,
+                originalVw: scopeVw,
               });
             }
             element.style.setProperty(cssVarName, scopeVw + 'px');
