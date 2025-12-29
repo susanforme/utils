@@ -56,6 +56,9 @@ export interface FlexibleOptions {
    */
   orientationchange?: boolean;
 
+  /**
+   * 在计算 vw 值后但在应用之前调用的转换函数。
+   */
   onTransform?: (options: {
     /**
      * 作用域元素的信息（如果适用）。
