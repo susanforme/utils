@@ -1,3 +1,22 @@
+export type ScopeItem = {
+  /**
+   * 设置 CSS 变量的作用域元素。
+   * 默认为 document.documentElement。
+   */
+  element: HTMLElement;
+  /**
+   * 每个布局的比例因子数组，用于海报模式或自定义缩放。
+   * 长度必须与 layouts 数组相同。
+   * 默认为 [1, 1, ...] (无额外缩放)。
+   */
+  ratio?: number[];
+  /**
+   * 用于 rem 基础值的 CSS 变量名。
+   * 默认为 "--local-scope-rem"。
+   */
+  cssVarName?: string;
+};
+
 /**
  * 弹性布局函数的配置选项。
  */
@@ -37,6 +56,25 @@ export interface FlexibleOptions {
    */
   orientationchange?: boolean;
 
+  onTransform?: (options: {
+    /**
+     * 作用域元素的信息（如果适用）。
+     */
+    scope?: ScopeItem;
+    /**
+     * 匹配的layout索引。
+     */
+    matchedIndex: number;
+    /**
+     * 原始计算得到的 vw 值（未经过任何比例调整）。
+     */
+    originalVw: number;
+    /**
+     * 计算得到的比例因子。
+     */
+    computedRatio: number;
+  }) => number;
+
   /**
    * 是否在特定的作用域元素上设置 CSS 变量。
    * 默认为 false，表示在 document 元素上设置字体大小。
@@ -56,24 +94,7 @@ export interface FlexibleOptions {
          */
         cssVarName?: string;
       }
-    | {
-        /**
-         * 设置 CSS 变量的作用域元素。
-         * 默认为 document.documentElement。
-         */
-        element: HTMLElement;
-        /**
-         * 每个布局的比例因子数组，用于海报模式或自定义缩放。
-         * 长度必须与 layouts 数组相同。
-         * 默认为 [1, 1, ...] (无额外缩放)。
-         */
-        ratio?: number[];
-        /**
-         * 用于 rem 基础值的 CSS 变量名。
-         * 默认为 "--local-scope-rem"。
-         */
-        cssVarName?: string;
-      }[];
+    | ScopeItem[];
 
   /**
    * 每个布局的比例因子数组，用于海报模式或自定义缩放。
@@ -172,12 +193,29 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
           matchedIndex = layouts.length - 1;
         }
       }
+      const originalVw = vw;
+      if (options.onTransform) {
+        vw = options.onTransform({
+          matchedIndex,
+          originalVw,
+          computedRatio: ratio?.[matchedIndex] ?? 1,
+        });
+      }
       if (scope) {
         if (Array.isArray(scope)) {
           scope.forEach((item) => {
             const { element = document.documentElement, cssVarName = defaultScopeCssVarName, ratio: scopeRatio } = item;
             const computedRatio = scopeRatio?.[matchedIndex] ?? ratio?.[matchedIndex] ?? 1;
-            element.style.setProperty(cssVarName, vw * computedRatio + 'px');
+            let scopeVw = originalVw * computedRatio;
+            if (options.onTransform) {
+              scopeVw = options.onTransform({
+                scope: item,
+                matchedIndex,
+                originalVw,
+                computedRatio,
+              });
+            }
+            element.style.setProperty(cssVarName, scopeVw + 'px');
           });
         } else {
           const { element = document.documentElement, cssVarName = defaultScopeCssVarName } = scope;
