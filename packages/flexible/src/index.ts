@@ -169,11 +169,10 @@ export const flexible = (options: FlexibleOptions = {}): (() => void) => {
     const recalculate = () => {
       //FIX: meta viewport 设置的 width 为 device-width 时，window.innerWidth 会比 window.visualViewport?.width 大
       // https://stackoverflow.com/questions/36297612/window-innerwidth-in-chromes-device-mode
-      const visualWidth = window.visualViewport?.width;
-      const viewportWidth = visualWidth ? visualWidth + scrollbarWidth : window.innerWidth; // 用于断点匹配
-      // const effectiveWidth = document.documentElement.clientWidth; // 用于rem计算
-      //TODO: ?没办法去判断滚动条的状态
-      const effectiveWidth = window.innerWidth - scrollbarWidth;
+      /** 事实上的宽度,用于来匹配断点 */
+      const viewportWidth = window.outerWidth;
+      //实际上的有效宽度
+      const effectiveWidth = window.outerWidth - scrollbarWidth;
 
       let vw = effectiveWidth / 100;
       let matched = false;
